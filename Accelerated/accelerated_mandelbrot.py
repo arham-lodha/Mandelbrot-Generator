@@ -66,7 +66,7 @@ class AcceleratedMandelbrot:
         self.pixels = np.zeros((size[1], size[0], 3), dtype=np.uint8)
         self.color_scheme = u1.cast_python_value(color_scheme)
         self.color_mode = "RGB"
-        self.color_map = color_map if self.color_scheme == 4 else np.array([[]], dtype=np.uint8)
+        self.color_map = color_map if self.color_scheme == 3 else np.array([[]], dtype=np.uint8)
 
         if self.color_scheme == 1:
             self.color_mode = "HSV"
@@ -250,7 +250,7 @@ class AcceleratedMandelbrot:
         Parameters:
         - filename (str): Output file name.
         """
-        img = Image.fromarray(self.pixels, mode=self.color_mode)
+        img = Image.fromarray(self.pixels, mode=self.color_mode).convert('RGB')
 
         if self.show_quadtree:
             self.draw_quadtree(img)

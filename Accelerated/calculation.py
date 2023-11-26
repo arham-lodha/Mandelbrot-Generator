@@ -1,7 +1,6 @@
 import numpy as np
 from numba import njit, f8, i4, u8, b1, u1
 
-
 from .coloring import grayscale, simple_hsv, quilt_coloring, colormap_coloring
 
 
@@ -52,39 +51,39 @@ def determine_colorscheme(max_iteration: int,
 
     if color_scheme == 0:
         return grayscale(max_iteration,
+                         iteration,
+                         x,
+                         y,
+                         escape_radius,
+                         smooth)
+    elif color_scheme == 1:
+        return simple_hsv(max_iteration,
                           iteration,
                           x,
                           y,
                           escape_radius,
                           smooth)
-    elif color_scheme == 1:
-        return simple_hsv(max_iteration,
-                           iteration,
-                           x,
-                           y,
-                           escape_radius,
-                           smooth)
     elif color_scheme == 2:
         return quilt_coloring(max_iteration,
-                               iteration,
-                               x, y,
-                               escape_radius,
-                               distance_estimate,
-                               smooth, )
+                              iteration,
+                              x, y,
+                              escape_radius,
+                              distance_estimate,
+                              smooth, )
     elif color_scheme == 3:
         return colormap_coloring(max_iteration,
-                                  iteration,
-                                  x,
-                                  y,
-                                  escape_radius,
-                                  smooth,
-                                  color_map)
+                                 iteration,
+                                 x,
+                                 y,
+                                 escape_radius,
+                                 smooth,
+                                 color_map)
     else:
         return grayscale(max_iteration,
-                          iteration,
-                          x, y,
-                          escape_radius,
-                          smooth)
+                         iteration,
+                         x, y,
+                         escape_radius,
+                         smooth)
 
 
 @njit(u1[:](f8, f8, u8, f8, b1, u1, u1[:, :], b1), fastmath=True)
@@ -115,8 +114,8 @@ def calculate(x0: float,
 
     if in_main_body(x0, y0):
         color = determine_colorscheme(max_iteration=max_iterations, iteration=max_iterations,
-                                     distance_estimate=0.0, x=x0, y=y0, escape_radius=escape_radius,
-                                     smooth=smooth, color_scheme=color_scheme, color_map=color_map)
+                                      distance_estimate=0.0, x=x0, y=y0, escape_radius=escape_radius,
+                                      smooth=smooth, color_scheme=color_scheme, color_map=color_map)
 
         return np.array([1, color[0], color[1], color[2]], dtype=np.uint8)
 
@@ -187,4 +186,3 @@ def calculate(x0: float,
         isMaxIteration = 1
 
     return np.array([isMaxIteration, color[0], color[1], color[2]], dtype=np.uint8)
-

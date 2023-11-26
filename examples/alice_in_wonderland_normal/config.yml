@@ -1,0 +1,11 @@
+---
+accelerated: false
+height: 1024
+width: 1024
+center_real: -0.7435
+center_imaginary: 0.1314
+world_width: 0.002
+max_iterations: 512
+color_scheme: 2
+mixed_raster: True
+...

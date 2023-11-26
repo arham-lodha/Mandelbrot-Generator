@@ -1,0 +1,7 @@
+---
+color_scheme: 1
+smooth: True
+mixed_raster: True
+escape_radius: 5.0
+max_iteration: 1000
+...

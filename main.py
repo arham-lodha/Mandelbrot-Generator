@@ -166,7 +166,12 @@ def set_photo_config(directory):
                     raise Exception(f"Configuration file has incorrect type in {key}")
 
                 if key in user_config:
-                    config[key] = user_config[key]
+                    if key == "center_real":
+                        config['center'][0] = user_config[key]
+                    elif key == "center_imaginary":
+                        config['center'][1] = user_config[key]
+                    else:
+                        config[key] = user_config[key]
 
             if config['color_scheme'] not in [0, 1, 2, 3]:
                 raise Exception("Incorrect color scheme set. Color scheme must be 0, 1, 2, or 3")
@@ -182,7 +187,7 @@ def set_photo_config(directory):
                     if config['colormap'] not in colormaps:
                         raise Exception(f"Provided colormap is not built in.")
 
-                    config['colormap'] = np.array(denormalize(plt.colormaps[config['colormap']].colors), dtype=np.uint8)
+                    config['colormap'] = np.array(denormalize(colormaps[config['colormap']].colors), dtype=np.uint8)
 
                 else:
                     colormap_file_path = os.path.join(directory, config['colormap'])
@@ -202,10 +207,12 @@ def main():
     """
     args = parse_arguments()
 
-    if not args.directory:
-        create_default_run_directory()
+    directory = args.directory
 
-    create_image(set_photo_config(args.directory), args.directory)
+    if not args.directory:
+        directory = create_default_run_directory()
+
+    create_image(set_photo_config(args.directory), directory)
 
 
 if __name__ == "__main__":

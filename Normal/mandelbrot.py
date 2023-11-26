@@ -149,7 +149,7 @@ class Mandelbrot:
         - filename (str): The filename to save the image.
         """
 
-        img = Image.fromarray(self.pixels, mode=self.color_mode)
+        img = Image.fromarray(self.pixels, mode=self.color_mode).convert('RGB')
 
         if self.show_quadtree:
             self.draw_quadtree(img)
