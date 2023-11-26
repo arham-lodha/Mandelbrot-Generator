@@ -117,6 +117,8 @@ The project uses a list (general data storage), tuples (coupling data together q
 - numba is used for fast math calculations, parallelization, and just in time compiling
 - Pillow is used for image creation.
 
+The main.py file is used to run the code with the user specified parameters.
+
 ## Future
 Right now the generator only makes still images, but I want to eventually have it make zooming mandelbrot videos.
 
