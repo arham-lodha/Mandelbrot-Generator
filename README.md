@@ -129,3 +129,10 @@ Right now the generator only makes still images, but I want to eventually have i
 ![enter image description here](https://github.com/arham-lodha/Mandelbrot-Generator/blob/master/examples/alice_in_wonderland_normal/image.png?raw=true)
 
 ![enter image description here](https://github.com/arham-lodha/Mandelbrot-Generator/blob/master/examples/spiral_twilight/image.png?raw=true)
+
+
+## References
+Wikipedia about the mandelbrot set - https://en.wikipedia.org/wiki/Mandelbrot_set
+Wikipedia about drawing algorithms for the Mandelbrot set - https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set
+Mu-Ency - The Encyclopedia of the Mandelbrot Set - https://www.mrob.com/pub/muency.html
+Real Python Website about drawing Mandelbrot set - https://realpython.com/mandelbrot-set-python/#drawing-the-mandelbrot-set-with-pillow
