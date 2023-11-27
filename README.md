@@ -12,8 +12,8 @@ This project is implementing a Mandelbrot Set Image Generator. The Mandelbrot Se
 
 ## Installation
 
-    git clone https://github.com/your-username/your-project.git
-    cd your-project
+    git clone https://github.com/arham-lodha/Mandelbrot-Generator/tree/master
+    cd Mandelbrot-Generator
     pip install -r requirements.txt
 
 ## Usage
@@ -74,6 +74,7 @@ self.y = np.linspace(0, size[1], num=size[1], dtype=np.float64) * -scale + offse
 
 
 ## Implementation
+![enter image description here](https://github.com/arham-lodha/Mandelbrot-Generator/blob/master/readme_assets/Running.png?raw=true)
 Most optimizations of the Mandelbrot set seek to decrease the computational cost of finding points within the Mandelbrot set as those serve as the bottleneck of the program. The first few optimizations seek to modify the calculation function which determines whether a point is or isn't in the mandelbrot set.
 1. **Avoidance of Square Roots**: When we calculate the absolute value of a complex number we have to take a square root because for all $z \in \mathbb{C}$, $|z| = \sqrt{\Re(z)^2  + \Im(z)^2}$. Taking the square root of a number is reasonably computationally inefficient compared to squaring a number so avoiding doing repeated square roots saves time as a whole. So instead of comparing $|z| \geq r_{escape}$, comparing $\Re(z)^2  + \Im(z)^2 \geq r_{escape}^2$ is much more efficient.
 2. **Bulb/Cardioid Checking**: There is a known formula of the main body of the mandelbrot set so just checking if the coordinates are within the main body with this formula prevents the useless computation of the largest section of the set
@@ -100,7 +101,7 @@ There are 3 algorithms which are used to render the Mandelbrot set each with the
 	- Accelerated implementation: The rastering process is parallelized by row using numba.
 - **Mixed Raster and Quadtree**: The purpose of the algorithm is to use the quadtree to find the pixels which correspond to points in the mandelbrot set, which would be the most difficult aspect of the computation, and rasterize the rest which would be the relatively easier part of the computation. A quadtree is initialized with bounds covering the entire image. It is split into 4 child quadtrees which each correspond to a quadrant of the image. All these children are added to a queue. Breath First Search is used to traverse the tree level by level. A quadtree is popped from the queue and all of the colors of its boundary pixels are computed and stored. If all of the boundary pixels are inside the mandelbrot set it flood fills everything inside the section of the pixel array which the quadtree corresponds to. If some of the boundary pixels are in the mandelbrot set and others aren’t, then it splits the quadtree into 4 children while ignoring the boundary. For example, it wants to split a quadtree with dimensions 16 x 16, it ignores the boundary so considers the square which is 14 x 14 and then splits this square into quadrants so now each of the smaller quadtrees have dimensions 7 x 7. 1.  This is done to prevent unnecessary recomputation. If none of the boundary pixels are in the mandelbrot set, the quadtree is left as is. After the quadtree is split its children are pushed into the queue to be computed in the future. After BFS has finished and the queue is empty with the computation of the values inside of the mandelbrot set, then rasterization kicks in and calculates the remaining points which hadn’t been computed.
 	- Accelerated Implementation: The rastering process is parallelized. In the fast_quadtree version of the quadtree computation. Instead of computing 1 quadtree at a time, it takes all the quadtree's in the queue at once and computes whether it needs to fill or split at once using parallelization. So it computes things in batches.
-- **Normal Quadtree**: The algorithm is a more pure form of the algorithm above. A quadtree is initialized to the entire image. First the quadtree is split into 4 child nodes corresponding to its quadrants. A queue is created and the children of the first quadree are inserted. Then breath first search is used to traverse the quadtree. Where a quadtree is popped from the queue and all of the colors of its boundary pixels are computed and stored. If all of the boundary pixels have the same color it floods everything inside the section of the pixel array which the quadtree corresponds to. If the boundary pixels don’t have the same colors, it splits the quadtree into 4 children while ignoring the boundary. For example, it wants to split a quadtree with dimensions 16 x 16, it ignores the boundary so considers the square which is 14 x 14 and then splits this square into quadrants so now each of the smaller quadtrees have dimensions 7 x 7. If none of the boundary pixels are in the mandelbrot set, the quadtree is left as is. After the quadtree is split its children are pushed into the queue to be computed in the future.
+- **Normal Quadtree**: The algorithm is a more pure form of the algorithm above. A quadtree is initialized to the entire image. First the quadtree is split into 4 child nodes corresponding to its quadrants. A queue is created and the children of the first quadree are inserted. Then breath first search is used to traverse the quadtree. Where a quadtree is popped from the queue and all of the colors of its boundary pixels are computed and stored. If all of the boundary pixels have the same color it floods everything inside the section of the pixel array which the quadtree corresponds to. If the boundary pixels don’t have the same colors, it splits the quadtree into 4 children while ignoring the boundary. For example, it wants to split a quadtree with dimensions 16 x 16, it ignores the boundary so considers the square which is 14 x 14 and then splits this square into quadrants so now each of the smaller quadtrees have dimensions 7 x 7. After the quadtree is split its children are pushed into the queue to be computed in the future.
 	- 	Accelerated Implementation: Instead of computing 1 quadtree at a time, it takes all the quadtree's in the queue at once and computes whether it needs to fill or split at once using parallelization. So it computes things in batches.
 
 ![enter image description here](https://github.com/arham-lodha/Mandelbrot-Generator/blob/master/examples/quadtree_view/image.png?raw=true)
@@ -118,6 +119,8 @@ The project uses a list (general data storage), tuples (coupling data together q
 - Pillow is used for image creation.
 
 The main.py file is used to run the code with the user specified parameters.
+
+One key flaw of this program is that at high precision where points are spaced close to $\epsilon_{machine} = 2^{-52}$, there is artifacting due to the loss of precision. So images which are incredibly zoomed may have loss of resolution and inaccuracies in the generation of the set.
 
 ## Future
 Right now the generator only makes still images, but I want to eventually have it make zooming mandelbrot videos.
